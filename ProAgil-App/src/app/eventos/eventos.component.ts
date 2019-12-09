@@ -10,8 +10,21 @@ import { HttpClient } from '@angular/common/http';
 
 export class EventosComponent implements OnInit {
 
-  title = 'ProAgil-App versão 2019';
-  eventos: any;
+  _filtroLista : string;
+
+  get filtroLista(): string{
+    return this._filtroLista;
+  }
+  set filtroLista(value: string) {
+    this._filtroLista = value;
+    this.eventosFiltrados = this.filtroLista ? this.filtrarEvento(this.filtroLista) : this.eventos;
+  }
+
+  eventosFiltrados: any = [];
+  eventos: any = [];
+  imagemLargura = 50;
+  imagemMargin = 2;
+  mostrarImagem = false;
 
   constructor(private http: HttpClient) {
 
@@ -23,10 +36,22 @@ export class EventosComponent implements OnInit {
 
   getEventos() {
     this.http.get('https://localhost:5001/WeatherForecast').subscribe(
-       response => { this.eventos = response; },
+       response => {
+       this.eventos = response;
+       console.log(response); },
     error => {
       console.log('deu erro');
     });
+  }
+
+  alternarImagem() {
+      this.mostrarImagem = !this.mostrarImagem;
+  }
+
+  filtrarEvento(filtroLista: string): any {
+
+    filtroLista = filtroLista.toLocaleLowerCase();
+    return this.eventos.filter( evento => evento.tema.toLocaleLowerCase().indexOf(filtroLista) !== -1);
   }
 
 }
