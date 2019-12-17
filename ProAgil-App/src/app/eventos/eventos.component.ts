@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { EventoService } from '../_services/evento.service';
+import { Evento } from '../_models/Evento';
 
 @Component({
   selector: 'app-eventos',
@@ -10,23 +12,23 @@ import { HttpClient } from '@angular/common/http';
 
 export class EventosComponent implements OnInit {
 
-  _filtroLista : string;
+  filtroListaStr: string;
 
-  get filtroLista(): string{
-    return this._filtroLista;
+  get filtroLista(): string {
+    return this.filtroListaStr;
   }
   set filtroLista(value: string) {
-    this._filtroLista = value;
-    this.eventosFiltrados = this.filtroLista ? this.filtrarEvento(this.filtroLista) : this.eventos;
+    this.filtroListaStr = value;
+    this.eventosFiltrados = this.filtroLista ? this.filtrarEvento() : this.eventos;
   }
 
-  eventosFiltrados: any = [];
-  eventos: any = [];
+  eventosFiltrados: Evento[];
+  eventos: Evento[];
   imagemLargura = 50;
   imagemMargin = 2;
   mostrarImagem = false;
 
-  constructor(private http: HttpClient) {
+  constructor(private eventoService: EventoService) {
 
    }
 
@@ -35,10 +37,12 @@ export class EventosComponent implements OnInit {
   }
 
   getEventos() {
-    this.http.get('http://localhost:5000/api/evento').subscribe(
-       response => {
-       this.eventos = response;
-       console.log(response); },
+    this.eventoService.getAllEvento().subscribe(
+    // tslint:disable-next-line: variable-name
+    (_eventos: Evento[]) => {
+       this.eventos = _eventos;
+       this.eventosFiltrados = this.eventos;
+       console.log(_eventos); },
     error => {
       console.log('deu erro');
     });
@@ -48,10 +52,10 @@ export class EventosComponent implements OnInit {
       this.mostrarImagem = !this.mostrarImagem;
   }
 
-  filtrarEvento(filtroLista: string): any {
+  filtrarEvento(): Evento[] {
 
-    filtroLista = filtroLista.toLocaleLowerCase();
-    return this.eventos.filter( evento => evento.tema.toLocaleLowerCase().indexOf(filtroLista) !== -1);
+    this.filtroListaStr = this.filtroListaStr.toLocaleLowerCase();
+    return this.eventos.filter(evento => evento.tema.toLocaleLowerCase().indexOf(this.filtroListaStr) !== -1);
   }
 
 }
