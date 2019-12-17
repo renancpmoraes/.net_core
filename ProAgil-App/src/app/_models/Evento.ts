@@ -8,7 +8,11 @@ export interface Evento {
          local: string;
          dataEvento: Date;
          tema: string;
+<<<<<<< HEAD
          qtdPessoas: number;
+=======
+         ttdPessoas: number;
+>>>>>>> 632e3441ccc19ae84d302f92ee16af5dbfce4585
          imagemURL: string;
          telefone: string;
          email: string;

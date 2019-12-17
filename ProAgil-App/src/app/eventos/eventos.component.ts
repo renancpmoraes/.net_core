@@ -37,12 +37,19 @@ export class EventosComponent implements OnInit {
   }
 
   getEventos() {
+<<<<<<< HEAD
     this.eventoService.getAllEvento().subscribe(
     // tslint:disable-next-line: variable-name
     (_eventos: Evento[]) => {
        this.eventos = _eventos;
        this.eventosFiltrados = this.eventos;
        console.log(_eventos); },
+=======
+    this.http.get('http://localhost:5000/api/evento').subscribe(
+       response => {
+       this.eventos = response;
+       console.log(response); },
+>>>>>>> 632e3441ccc19ae84d302f92ee16af5dbfce4585
     error => {
       console.log('deu erro');
     });
